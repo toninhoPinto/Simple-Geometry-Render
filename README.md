@@ -12,9 +12,18 @@ https://free3d.com/3d-model/goku-ss2-ss3-23558.html
 
 ![](http://i.imgur.com/D2LXVUY.png)
 
+Extremely simple, just pass the vertexes from the vertex shader directly to the fragment shader. Just make sure to output a PointStream and it will render as points instead of triangles.
+```void geom(triangle v2g IN[3], inout PointStream<g2f> triStream )```
+
+To add extra point density you need to create extra points inside the triangle. The simple way would be to average the points 
+and find a center to the triangle. Then extra points can be found along a vector poiting from the center to any of the triangle vertex. A more advanced approach would be to use barycentric coordinates and some random noise/values to find positions inside a triangle randomly.
+
 ## Lines
 
 ![](http://i.imgur.com/mQ7Auer.png)
+
+Extremely simple, just pass the vertexes from the vertex shader directly to the fragment shader. Just make sure to output a LineStream and it will render as lines instead of triangles.
+```void geom(triangle v2g IN[3], inout LineStream<g2f> triStream )```
 
 ## Quads
 
