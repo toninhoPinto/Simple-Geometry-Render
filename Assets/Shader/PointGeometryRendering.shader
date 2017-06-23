@@ -39,7 +39,7 @@
 
 			struct g2f
 			{
-				float2 uvOriginal : TEXCOORD0;
+				float2 uv : TEXCOORD0;
 				float4 vertex : SV_POSITION;
 				float3 normal : NORMAL;
 			};
@@ -77,22 +77,22 @@
 				g2f pIn;
 
 				pIn.vertex = mul(vp, v0);
-				pIn.uvOriginal = uvOriginal;
+				pIn.uv = IN[0].uv;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 				
 				pIn.vertex = mul(vp, v1);
-				pIn.uvOriginal = uvOriginal;
+				pIn.uv = IN[1].uv;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
 				pIn.vertex = mul(vp, v2);
-				pIn.uvOriginal = uvOriginal;
+				pIn.uv = IN[2].uv;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
 				pIn.vertex = mul(vp, center);
-				pIn.uvOriginal = uvOriginal;
+				pIn.uv = uvOriginal;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
@@ -100,32 +100,32 @@
 				float nPointDistance = 1 / nPoints;
 				for (int i = 0; i < nPoints; i++) {
 					pIn.vertex = mul(vp, center + (v0 - center)*nPointDistance*i);
-					pIn.uvOriginal = uvOriginal;
+					pIn.uv = uvOriginal;
 					pIn.normal = normal;
 					triStream.Append(pIn);
 
 					pIn.vertex = mul(vp, center + (v1 - center)*nPointDistance*i);
-					pIn.uvOriginal = uvOriginal;
+					pIn.uv = uvOriginal;
 					pIn.normal = normal;
 					triStream.Append(pIn);
 
 					pIn.vertex = mul(vp, center + (v2 - center)*nPointDistance*i);
-					pIn.uvOriginal = uvOriginal;
+					pIn.uv = uvOriginal;
 					pIn.normal = normal;
 					triStream.Append(pIn);
 
 					pIn.vertex = mul(vp, center + ((v0 - center)+ (v1 - center)) / 2 *nPointDistance*i);
-					pIn.uvOriginal = uvOriginal;
+					pIn.uv = uvOriginal;
 					pIn.normal = normal;
 					triStream.Append(pIn);
 
 					pIn.vertex = mul(vp, center + ((v1 - center) + (v2 - center)) / 2 *nPointDistance*i);
-					pIn.uvOriginal = uvOriginal;
+					pIn.uv = uvOriginal;
 					pIn.normal = normal;
 					triStream.Append(pIn);
 
 					pIn.vertex = mul(vp, center + ((v2 - center) + (v0 - center)) / 2 *nPointDistance*i);
-					pIn.uvOriginal = uvOriginal;
+					pIn.uv = uvOriginal;
 					pIn.normal = normal;
 					triStream.Append(pIn);
 				}
@@ -136,7 +136,7 @@
 			fixed4 frag (g2f i) : SV_Target
 			{
 				float ldotn = max(dot(_WorldSpaceLightPos0, i.normal),.5);
-				fixed4 col = tex2D(_MainTex, i.uvOriginal);
+				fixed4 col = tex2D(_MainTex, i.uv);
 				col.rgb *= ldotn;
 				return col;
 			}
