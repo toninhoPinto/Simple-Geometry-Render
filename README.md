@@ -32,6 +32,25 @@ and find a center to the triangle. Then extra points can be found along a vector
 Extremely simple, just pass the vertexes from the vertex shader directly to the fragment shader. Just make sure to output a LineStream and it will render as lines instead of triangles.
 ```void geom(triangle v2g IN[3], inout LineStream<g2f> triStream )```
 
+Another use could be to create normals visualization.
+
+``` 
+pIn.vertex = mul(vp, center);
+pIn.uv = IN[0].uv;
+pIn.normal = normal;
+triStream.Append(pIn);
+
+pIn.vertex = mul(vp, center + float4(normalize(cross(v0-v1, v2-v1)), 0)* _Size);
+pIn.uv = IN[0].uv;
+pIn.normal = normal;
+triStream.Append(pIn); 
+```
+
+We make a point at the center of the triangle and then project it by the triangle normal.
+
+![](http://i.imgur.com/zwPbA79.png)
+
+
 ## Quads
 
 ### QuadGeometryRendering
@@ -47,15 +66,15 @@ with ``` o.color = tex2Dlod(_MainTex, float4(o.uv,0,0)); ```
 Then the main meat, the geometry shader. First we need to prepare all the variables.
 
 ```
-				float3 normal = normalize((n0 + n1 + n2) / 3);
-				float4 center = (v0 + v1 + v2) / 3;
+float3 normal = normalize((n0 + n1 + n2) / 3);
+float4 center = (v0 + v1 + v2) / 3;
 
-				float3 look = _WorldSpaceCameraPos - center;
-				look = normalize(look);
-				float4 right = float4(cross(float3(0, 1, 0), look),0); 
-        
-                                float4 side = right * _Size;
-				float4 up = float4(0, 1, 0, 0) * _Size;
+float3 look = _WorldSpaceCameraPos - center;
+look = normalize(look);
+float4 right = float4(cross(float3(0, 1, 0), look),0); 
+
+float4 side = right * _Size;
+float4 up = float4(0, 1, 0, 0) * _Size;
 
 ``` 
 
@@ -82,11 +101,11 @@ For each of these vertexes you also send the normal (the one averaged), the colo
 The uv's are fairly simple, bottom left = 0,0 / top right = 1,1.
 
 ```
-				float ldotn = max(dot(_WorldSpaceLightPos0, i.normal),.5);
-				fixed4 col = i.color * tex2D(_PointTex, i.uv);
-				col.rgb *= ldotn;
-				if (col.a < .5)
-					discard;
+float ldotn = max(dot(_WorldSpaceLightPos0, i.normal),.5);
+fixed4 col = i.color * tex2D(_PointTex, i.uv);
+col.rgb *= ldotn;
+if (col.a < .5)
+	discard;
 ``` 
 
 so we can use the triangle averaged normal in order to so some shading, then use a texture and the in-quad 
