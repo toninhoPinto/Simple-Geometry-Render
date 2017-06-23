@@ -80,78 +80,17 @@
 
 				g2f pIn;
 
-				pIn.vertex = mul(vp, center + side - up + back);
+				pIn.vertex = mul(vp, center - side + up - back);
 				pIn.uv = uv;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 				
-				pIn.vertex = mul(vp, center + side + up + back);
+				pIn.vertex = mul(vp, center + side + up - back);
 				pIn.uv = uv;
 				pIn.normal = normal;
 				triStream.Append(pIn);
-
-				pIn.vertex = mul(vp, center - side - up + back);
-				pIn.uv = uv;
-				pIn.normal = normal;
-				triStream.Append(pIn);
-
-				//----------------- tri
-
-				pIn.vertex = mul(vp, center - side + up + back);
-				pIn.uv = uv;
-				pIn.normal = normal;
-				triStream.Append(pIn);
-
-				//----------------- tri
 
 				pIn.vertex = mul(vp, center - side - up - back);
-				pIn.uv = uv;
-				pIn.normal = normal;
-				triStream.Append(pIn);
-
-				//----------------- tri
-
-				pIn.vertex = mul(vp, center - side + up - back);
-				pIn.uv = uv;
-				pIn.normal = normal;
-				triStream.Append(pIn);
-
-				//----------------- tri
-
-				pIn.vertex = mul(vp, center + side - up - back);
-				pIn.uv = uv;
-				pIn.normal = normal;
-				triStream.Append(pIn);
-
-				//----------------- tri
-
-				pIn.vertex = mul(vp, center + side + up - back);
-				pIn.uv = uv;
-				pIn.normal = normal;
-				triStream.Append(pIn);
-
-				triStream.RestartStrip();
-
-				//----------------- tri strip
-
-				pIn.vertex = mul(vp, center - side + up - back);
-				pIn.uv = uv;
-				pIn.normal = normal;
-				triStream.Append(pIn);
-
-				pIn.vertex = mul(vp, center - side + up + back);
-				pIn.uv = uv;
-				pIn.normal = normal;
-				triStream.Append(pIn);
-
-				pIn.vertex = mul(vp, center + side + up - back);
-				pIn.uv = uv;
-				pIn.normal = normal;
-				triStream.Append(pIn);
-
-				//----------------- tri
-
-				pIn.vertex = mul(vp, center + side + up + back);
 				pIn.uv = uv;
 				pIn.normal = normal;
 				triStream.Append(pIn);
@@ -172,14 +111,61 @@
 
 				//----------------- tri
 
-				pIn.vertex = mul(vp, center - side - up - back);
+				pIn.vertex = mul(vp, center + side + up - back);
 				pIn.uv = uv;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
 				//----------------- tri
 
+				pIn.vertex = mul(vp, center + side + up + back);
+				pIn.uv = uv;
+				pIn.normal = normal;
+				triStream.Append(pIn);
+
+				//----------------- tri
+
+				pIn.vertex = mul(vp, center - side + up - back);
+				pIn.uv = uv;
+				pIn.normal = normal;
+				triStream.Append(pIn);
+
+				//----------------- tri
+
+				pIn.vertex = mul(vp, center - side + up + back);
+				pIn.uv = uv;
+				pIn.normal = normal;
+				triStream.Append(pIn);
+
+				//----------------- tri
+				pIn.vertex = mul(vp, center - side - up - back);
+				pIn.uv = uv;
+				pIn.normal = normal;
+				triStream.Append(pIn);
+
+				//----------------- tri
 				pIn.vertex = mul(vp, center - side - up + back);
+				pIn.uv = uv;
+				pIn.normal = normal;
+				triStream.Append(pIn);
+
+				//----------------- tri
+
+				pIn.vertex = mul(vp, center + side - up + back);
+				pIn.uv = uv;
+				pIn.normal = normal;
+				triStream.Append(pIn);
+
+				//----------------- tri
+
+				pIn.vertex = mul(vp, center - side + up + back);
+				pIn.uv = uv;
+				pIn.normal = normal;
+				triStream.Append(pIn);
+
+				//----------------- tri
+
+				pIn.vertex = mul(vp, center + side + up + back);
 				pIn.uv = uv;
 				pIn.normal = normal;
 				triStream.Append(pIn);

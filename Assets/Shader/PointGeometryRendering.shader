@@ -3,7 +3,6 @@
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
-		_Size("Size of Cube", Range(0,10)) = 0.5
 	}
 	SubShader
 	{

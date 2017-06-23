@@ -1,8 +1,9 @@
-﻿Shader "Custom/LineGeometryRendering"
+﻿Shader "Custom/NormalGeometryRendering"
 {
 	Properties
 	{
 		_MainTex ("Texture", 2D) = "white" {}
+		_Size("Size of Line", Range(0,10)) = 0.05
 	}
 	SubShader
 	{
@@ -56,7 +57,7 @@
 				return o;
 			}
 
-			[maxvertexcount(3)]
+			[maxvertexcount(2)]
 			void geom(triangle v2g IN[3], inout LineStream<g2f> triStream )
 			{
 				float4 v0 = IN[0].vertex;
@@ -75,18 +76,13 @@
 
 				g2f pIn;
 
-				pIn.vertex = mul(vp, v0);
+				pIn.vertex = mul(vp, center);
 				pIn.uv = IN[0].uv;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
-				pIn.vertex = mul(vp, v1);
-				pIn.uv = IN[1].uv;
-				pIn.normal = normal;
-				triStream.Append(pIn);
-
-				pIn.vertex = mul(vp, v2);
-				pIn.uv = IN[2].uv;
+				pIn.vertex = mul(vp, center + float4(normalize(cross(v0-v1, v2-v1)), 0)* _Size);
+				pIn.uv = IN[0].uv;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
