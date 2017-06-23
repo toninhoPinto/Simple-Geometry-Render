@@ -7,6 +7,13 @@ Very beginner level project.
 The original mesh was downloaded from:
 https://free3d.com/3d-model/goku-ss2-ss3-23558.html
 
+## Table of Content
+- [Points](#points)
+- [Lines](#lines)
+- [Quads](#quads)
+- [Cubes](#cubes)
+
+(I start with the Quads so after I changed the color sampling it that change also happens on the points and line section)
 
 ## Points
 
@@ -111,6 +118,14 @@ better uvs could be calculated with barycentric interpolation but I don't think 
 
 
 ## Cubes
+
+Cubes is very similar to the Quads version. I implemented two different versions.
+The first has a cube as a full color representing the full mesh shade color.
+The second has actual per-face shading on each cube.
+
+The main difference is that the first approach uses a full triangle strip for the whole cube. The normal of each vertex is the averaged normal of the triangle vertexes.
+
+The second approach only uses 1 triangle strip for each face. This avoids vertex sharing, so each vertex can now have a normal that is not shared between faces. You then calculate the normals for each face (this is not hard, you already have a side, back and top vectors that you used to create the faces, now you just need to match them correctly with the faces). Using that face on the fragment shader you can then shade each face individually.
 
 ![](http://i.imgur.com/G1cWKoB.png)
 
