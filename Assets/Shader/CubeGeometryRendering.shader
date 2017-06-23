@@ -7,10 +7,9 @@
 	}
 	SubShader
 	{
-		Tags { "Queue" = "Transparent" "RenderType" = "Transparent"  "LightMode" = "ForwardBase" }
+		Tags { "RenderType" = "Opaque"  "LightMode" = "ForwardBase" }
 
 		Cull Back
-		Blend SrcAlpha OneMinusSrcAlpha
 		LOD 100
 
 		Pass
@@ -34,15 +33,13 @@
 			struct v2g
 			{
 				float2 uv : TEXCOORD0;
-				float4 color : TEXCOORD1;
 				float4 vertex : SV_POSITION;
 				float3 normal : NORMAL;
 			};
 
 			struct g2f
 			{
-				float2 uv : TEXCOORD0;
-				float4 color : TEXCOORD1;
+				float2 uvOriginal : TEXCOORD0;
 				float4 vertex : SV_POSITION;
 				float3 normal : NORMAL;
 			};
@@ -57,8 +54,6 @@
 				o.vertex = mul(unity_ObjectToWorld,v.vertex);
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				o.normal = mul(v.normal, unity_WorldToObject);
-				o.color = tex2Dlod(_MainTex, float4(o.uv,0,0));
-				UNITY_TRANSFER_FOG(o,o.vertex);
 				return o;
 			}
 
@@ -73,8 +68,8 @@
 				float3 n1 = IN[1].normal;
 				float3 n2 = IN[2].normal;
 
+				float2 uvOriginal = (IN[0].uv + IN[1].uv + IN[2].uv) / 3;
 				float3 normal = normalize((n0 + n1 + n2) / 3);
-
 				float4 center = (v0 + v1 + v2) / 3;
 
 				float4x4 vp = mul(UNITY_MATRIX_MVP, unity_WorldToObject);
@@ -86,60 +81,52 @@
 				g2f pIn;
 
 				pIn.vertex = mul(vp, center + side - up + back);
-				pIn.uv = float2(1,0);
-				pIn.color = IN[0].color;
+				pIn.uvOriginal = uvOriginal;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 				
 				pIn.vertex = mul(vp, center + side + up + back);
-				pIn.uv = float2(1, 1);
-				pIn.color = IN[1].color;
+				pIn.uvOriginal = uvOriginal;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
 				pIn.vertex = mul(vp, center - side - up + back);
-				pIn.uv = float2(0, 0);
-				pIn.color = IN[2].color;
+				pIn.uvOriginal = uvOriginal;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
 				//----------------- tri
 
 				pIn.vertex = mul(vp, center - side + up + back);
-				pIn.uv = float2(0, 0);
-				pIn.color = IN[2].color;
+				pIn.uvOriginal = uvOriginal;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
 				//----------------- tri
 
 				pIn.vertex = mul(vp, center - side - up - back);
-				pIn.uv = float2(0, 0);
-				pIn.color = IN[2].color;
+				pIn.uvOriginal = uvOriginal;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
 				//----------------- tri
 
 				pIn.vertex = mul(vp, center - side + up - back);
-				pIn.uv = float2(0, 0);
-				pIn.color = IN[2].color;
+				pIn.uvOriginal = uvOriginal;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
 				//----------------- tri
 
 				pIn.vertex = mul(vp, center + side - up - back);
-				pIn.uv = float2(1, 0);
-				pIn.color = IN[0].color;
+				pIn.uvOriginal = uvOriginal;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
 				//----------------- tri
 
 				pIn.vertex = mul(vp, center + side + up - back);
-				pIn.uv = float2(1, 0);
-				pIn.color = IN[0].color;
+				pIn.uvOriginal = uvOriginal;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
@@ -148,60 +135,52 @@
 				//----------------- tri strip
 
 				pIn.vertex = mul(vp, center - side + up - back);
-				pIn.uv = float2(0, 0);
-				pIn.color = IN[2].color;
+				pIn.uvOriginal = uvOriginal;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
 				pIn.vertex = mul(vp, center - side + up + back);
-				pIn.uv = float2(1, 0);
-				pIn.color = IN[0].color;
+				pIn.uvOriginal = uvOriginal;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
 				pIn.vertex = mul(vp, center + side + up - back);
-				pIn.uv = float2(1, 1);
-				pIn.color = IN[1].color;
+				pIn.uvOriginal = uvOriginal;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
 				//----------------- tri
 
 				pIn.vertex = mul(vp, center + side + up + back);
-				pIn.uv = float2(1, 0);
-				pIn.color = IN[0].color;
+				pIn.uvOriginal = uvOriginal;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
 				//----------------- tri
 
 				pIn.vertex = mul(vp, center + side - up - back);
-				pIn.uv = float2(1, 1);
-				pIn.color = IN[1].color;
+				pIn.uvOriginal = uvOriginal;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
 				//----------------- tri
 
 				pIn.vertex = mul(vp, center + side - up + back);
-				pIn.uv = float2(1, 1);
-				pIn.color = IN[1].color;
+				pIn.uvOriginal = uvOriginal;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
 				//----------------- tri
 
 				pIn.vertex = mul(vp, center - side - up - back);
-				pIn.uv = float2(1, 1);
-				pIn.color = IN[1].color;
+				pIn.uvOriginal = uvOriginal;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
 				//----------------- tri
 
 				pIn.vertex = mul(vp, center - side - up + back);
-				pIn.uv = float2(1, 1);
-				pIn.color = IN[1].color;
+				pIn.uvOriginal = uvOriginal;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
@@ -211,7 +190,7 @@
 			fixed4 frag (g2f i) : SV_Target
 			{
 				float ldotn = max(dot(_WorldSpaceLightPos0, i.normal),.5);
-				fixed4 col = i.color;
+				fixed4 col = tex2D(_MainTex, i.uvOriginal);
 				col.rgb *= ldotn;
 				return col;
 			}

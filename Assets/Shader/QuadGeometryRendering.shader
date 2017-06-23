@@ -62,7 +62,6 @@
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
 				o.normal = mul(v.normal, unity_WorldToObject);
 				o.color = tex2Dlod(_MainTex, float4(o.uv,0,0));
-				UNITY_TRANSFER_FOG(o,o.vertex);
 				return o;
 			}
 
@@ -79,73 +78,77 @@
 
 				float3 normal = normalize((n0 + n1 + n2) / 3);
 				float4 center = (v0 + v1 + v2) / 3;
+
+				//billboarding: look is the view vector, by using the cross product with the view vector and the up vector 
 				float3 look = _WorldSpaceCameraPos - center;
-				//look.y = 0;
 				look = normalize(look);
 				float4 right = float4(cross(float3(0, 1, 0), look),0);
 
-
 				float4x4 vp = mul(UNITY_MATRIX_MVP, unity_WorldToObject);
 
-				//_WorldSpaceCameraPos
 				float4 side = right * _Size;
 				float4 up = float4(0, 1, 0, 0) * _Size;
 
+
 				g2f pIn;
 
+				//Quad on the center of the triangle
+
 				pIn.vertex = mul(vp, center + side - up);
-				pIn.uv = float2(1,0);
+				pIn.uv = float2(0, 0);
 				pIn.color = IN[0].color;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 				
 				pIn.vertex = mul(vp, center + side + up);
-				pIn.uv = float2(1, 1);
+				pIn.uv = float2(0, 1);
 				pIn.color = IN[1].color;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
 				pIn.vertex = mul(vp, center - side - up);
-				pIn.uv = float2(0, 0);
+				pIn.uv = float2(1, 0);
 				pIn.color = IN[2].color;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
 				pIn.vertex = mul(vp, center - side + up);
-				pIn.uv = float2(0, 1);
+				pIn.uv = float2(1, 1);
 				pIn.color = IN[2].color;
 				pIn.normal = normal;
 				triStream.Append(pIn);
 
 				triStream.RestartStrip();
 
+
+				//Extra quads to add more point density
+
 				float numbersOfPoints = _Numbers;
 				float ratioNumbersOfPoints = 1/ numbersOfPoints;
-
 
 				float4 newCenter = ((v0 - center) * ratioNumbersOfPoints) + center;
 
 				for (int i = 0; i < numbersOfPoints; i++) {
 
 					pIn.vertex = mul(vp, newCenter + side - up);
-					pIn.uv = float2(1, 0);
+					pIn.uv = float2(0, 0);
 					pIn.color = IN[0].color;
 					triStream.Append(pIn);
 
 					pIn.vertex = mul(vp, newCenter + side + up);
-					pIn.uv = float2(1, 1);
+					pIn.uv = float2(0, 1);
 					pIn.color = IN[1].color;
 					pIn.normal = normal;
 					triStream.Append(pIn);
 
 					pIn.vertex = mul(vp, newCenter - side - up);
-					pIn.uv = float2(0, 0);
+					pIn.uv = float2(1, 0);
 					pIn.color = IN[2].color;
 					pIn.normal = normal;
 					triStream.Append(pIn);
 
 					pIn.vertex = mul(vp, newCenter - side + up);
-					pIn.uv = float2(0, 1);
+					pIn.uv = float2(1, 1);
 					pIn.color = IN[2].color;
 					pIn.normal = normal;
 					triStream.Append(pIn);
@@ -158,60 +161,60 @@
 				for (int i = 0; i < numbersOfPoints; i++) {
 
 					pIn.vertex = mul(vp, newCenter + side - up);
-					pIn.uv = float2(1, 0);
+					pIn.uv = float2(0, 0);
 					pIn.color = IN[0].color;
 					triStream.Append(pIn);
 
 					pIn.vertex = mul(vp, newCenter + side + up);
-					pIn.uv = float2(1, 1);
+					pIn.uv = float2(0, 1);
 					pIn.color = IN[1].color;
 					pIn.normal = normal;
 					triStream.Append(pIn);
 
 					pIn.vertex = mul(vp, newCenter - side - up);
-					pIn.uv = float2(0, 0);
+					pIn.uv = float2(1, 0);
 					pIn.color = IN[2].color;
 					pIn.normal = normal;
 					triStream.Append(pIn);
 
 					pIn.vertex = mul(vp, newCenter - side + up);
-					pIn.uv = float2(0, 1);
+					pIn.uv = float2(1, 1);
 					pIn.color = IN[2].color;
 					pIn.normal = normal;
 					triStream.Append(pIn);
 
 					triStream.RestartStrip();
-					newCenter = ((v1 - center) * ratioNumbersOfPoints * (i + 1)) + center;
+					newCenter = ((v0 - center) * ratioNumbersOfPoints * (i + 1)) + center;
 				}
 
 				newCenter = ((v2 - center) * ratioNumbersOfPoints) + center;
 				for (int i = 0; i < numbersOfPoints; i++) {
 
 					pIn.vertex = mul(vp, newCenter + side - up);
-					pIn.uv = float2(1, 0);
+					pIn.uv = float2(0, 0);
 					pIn.color = IN[0].color;
 					triStream.Append(pIn);
 
 					pIn.vertex = mul(vp, newCenter + side + up);
-					pIn.uv = float2(1, 1);
+					pIn.uv = float2(0, 1);
 					pIn.color = IN[1].color;
 					pIn.normal = normal;
 					triStream.Append(pIn);
 
 					pIn.vertex = mul(vp, newCenter - side - up);
-					pIn.uv = float2(0, 0);
+					pIn.uv = float2(1, 0);
 					pIn.color = IN[2].color;
 					pIn.normal = normal;
 					triStream.Append(pIn);
 
 					pIn.vertex = mul(vp, newCenter - side + up);
-					pIn.uv = float2(0, 1);
+					pIn.uv = float2(1, 1);
 					pIn.color = IN[2].color;
 					pIn.normal = normal;
 					triStream.Append(pIn);
 
 					triStream.RestartStrip();
-					newCenter = ((v2 - center) * ratioNumbersOfPoints * (i + 1)) + center;
+					newCenter = ((v0 - center) * ratioNumbersOfPoints * (i + 1)) + center;
 				}
 			}
 			
