@@ -146,6 +146,8 @@ The main difference is that the first approach uses a full triangle strip for th
 
 The second approach only uses 1 triangle strip for each face. This avoids vertex sharing, so each vertex can now have a normal that is not shared between faces. You then calculate the normals for each face (this is not hard, you already have a side, back and top vectors that you used to create the faces, now you just need to match them correctly with the faces). Using that face on the fragment shader you can then shade each face individually.
 
+this link helped me to make a cube in a single strip http://www.sierracosworth.nl/gamedev/geom_cube_NOK2.jpg.
+
 ![](http://i.imgur.com/G1cWKoB.png)
 
 ![](http://i.imgur.com/USl73Ub.png)
